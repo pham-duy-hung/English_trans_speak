@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>English Trans Speak — Options</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Cấu hình Azure Translator</h1>
+      <p class="hint">
+        Tạo resource <strong>Translator</strong> trên Azure Portal, lấy
+        <em>Key</em> và <em>Location/Region</em>, rồi nhập bên dưới.
+      </p>
+
+      <label for="azureKey">Azure Subscription Key</label>
+      <input id="azureKey" type="password" autocomplete="off" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+
+      <label for="azureRegion">Region</label>
+      <input id="azureRegion" type="text" placeholder="ví dụ: eastasia, southeastasia, global" />
+
+      <div class="actions">
+        <button id="btnSave" type="button">Lưu</button>
+        <button id="btnTest" type="button" class="secondary">Test dịch</button>
+      </div>
+
+      <p id="status" class="status" role="status"></p>
+
+      <section class="help">
+        <h2>Free tier</h2>
+        <ul>
+          <li>Azure Translator F0: ~2 triệu ký tự / tháng</li>
+          <li>Key lưu trong <code>chrome.storage.sync</code> trên máy bạn</li>
+          <li>Không commit key lên GitHub</li>
+        </ul>
+      </section>
+    </main>
+
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

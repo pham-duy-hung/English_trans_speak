@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>English Trans Speak</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <h1>English Trans Speak</h1>
+      <a href="../options/options.html" target="_blank" class="settings" title="Cấu hình Azure">⚙</a>
+    </header>
+
+    <label for="source">Đoạn tiếng Anh</label>
+    <textarea id="source" rows="6" placeholder="Dán hoặc bôi đen text trên trang rồi mở extension..."></textarea>
+
+    <div class="row">
+      <button id="btnGrab" type="button" class="secondary">Lấy text đang chọn</button>
+      <label class="rate">
+        Tốc độ
+        <input id="rate" type="range" min="0.6" max="1.4" step="0.05" value="0.95" />
+      </label>
+    </div>
+
+    <div class="actions">
+      <button id="btnTranslate" type="button">Dịch (Azure)</button>
+      <button id="btnSpeak" type="button" class="secondary">Đọc EN</button>
+      <button id="btnBoth" type="button">Dịch + Đọc</button>
+      <button id="btnStop" type="button" class="danger">Dừng</button>
+    </div>
+
+    <label for="result">Bản dịch tiếng Việt</label>
+    <textarea id="result" rows="6" readonly placeholder="Kết quả dịch sẽ hiện ở đây..."></textarea>
+
+    <p id="status" class="status" role="status"></p>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
