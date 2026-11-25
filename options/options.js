@@ -1,4 +1,4 @@
-import { translateWithAzure } from '../lib/azure.js';
+import { getAzureConfig, translateWithAzure } from '../lib/azure.js';
 
 const keyEl = document.getElementById('azureKey');
 const regionEl = document.getElementById('azureRegion');
@@ -12,12 +12,9 @@ function setStatus(message, type = '') {
 }
 
 async function load() {
-  const { azureKey = '', azureRegion = 'eastasia' } = await chrome.storage.sync.get([
-    'azureKey',
-    'azureRegion',
-  ]);
-  keyEl.value = azureKey;
-  regionEl.value = azureRegion;
+  const { key, region } = await getAzureConfig();
+  keyEl.value = key;
+  regionEl.value = region || 'eastasia';
 }
 
 btnSave.addEventListener('click', async () => {

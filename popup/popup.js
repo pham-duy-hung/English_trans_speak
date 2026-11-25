@@ -1,18 +1,17 @@
 import { getAzureConfig, translateWithAzure } from '../lib/azure.js';
-import { speakText, stopSpeaking, warmUpVoices } from '../lib/tts.js';
+import { listEnglishVoices, speakText, stopSpeaking, warmUpVoices } from '../lib/tts.js';
 
 const sourceEl = document.getElementById('source');
 const resultEl = document.getElementById('result');
 const statusEl = document.getElementById('status');
 const rateEl = document.getElementById('rate');
+const voiceEl = document.getElementById('voice');
 
 const btnGrab = document.getElementById('btnGrab');
 const btnTranslate = document.getElementById('btnTranslate');
 const btnSpeak = document.getElementById('btnSpeak');
 const btnBoth = document.getElementById('btnBoth');
 const btnStop = document.getElementById('btnStop');
-
-warmUpVoices();
 
 function setStatus(message, type = '') {
   statusEl.textContent = message || '';
@@ -24,6 +23,47 @@ function setBusy(busy) {
     btn.disabled = busy;
   });
 }
+
+async function fillVoices() {
+  await warmUpVoices();
+  const voices = listEnglishVoices();
+  const { voiceName = '' } = await chrome.storage.sync.get(['voiceName']);
+
+  voiceEl.innerHTML = '';
+  if (!voices.length) {
+    const opt = document.createElement('option');
+    opt.value = '';
+    opt.textContent = 'Không tìm thấy giọng EN';
+    voiceEl.appendChild(opt);
+    return;
+  }
+
+  for (const voice of voices) {
+    const opt = document.createElement('option');
+    opt.value = voice.name;
+    const tag = /google/i.test(voice.name)
+      ? '★ Google'
+      : /natural|neural/i.test(voice.name)
+        ? '★ Neural'
+        : voice.localService
+          ? 'Local'
+          : 'Online';
+    opt.textContent = `${voice.name} (${voice.lang}) · ${tag}`;
+    voiceEl.appendChild(opt);
+  }
+
+  if (voiceName && voices.some((v) => v.name === voiceName)) {
+    voiceEl.value = voiceName;
+  } else {
+    voiceEl.value = voices[0].name;
+    await chrome.storage.sync.set({ voiceName: voices[0].name });
+  }
+}
+
+voiceEl.addEventListener('change', async () => {
+  await chrome.storage.sync.set({ voiceName: voiceEl.value });
+  setStatus(`Đã chọn: ${voiceEl.value}`, 'ok');
+});
 
 async function getPageSelection() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -57,8 +97,12 @@ async function speakSource() {
     throw new Error('Hãy nhập hoặc lấy đoạn tiếng Anh trước.');
   }
 
-  setStatus('Đang đọc...');
-  await speakText(text, { lang: 'en-US', rate: Number(rateEl.value) || 0.95 });
+  setStatus(`Đang đọc (${voiceEl.value || 'default'})...`);
+  await speakText(text, {
+    lang: 'en-US',
+    rate: Number(rateEl.value) || 0.95,
+    voiceName: voiceEl.value,
+  });
   setStatus('Đã đọc xong.', 'ok');
 }
 
@@ -124,3 +168,5 @@ chrome.storage.session.get(['pendingSelection']).then(({ pendingSelection }) => 
     chrome.storage.session.remove('pendingSelection');
   }
 });
+
+fillVoices();

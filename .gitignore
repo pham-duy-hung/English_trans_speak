@@ -13,3 +13,4 @@ dist/
 *.zip
 secrets/
 azure-keys.txt
+pack-secrets.json

@@ -1,10 +1,15 @@
-chrome.runtime.onInstalled.addListener(() => {
+import { ensureSharedConfigSeeded } from '../lib/azure.js';
+
+chrome.runtime.onInstalled.addListener(async () => {
   chrome.contextMenus.create({
     id: 'ets-translate-speak',
     title: 'English Trans Speak: lấy đoạn này',
     contexts: ['selection'],
   });
+  await ensureSharedConfigSeeded();
 });
+
+ensureSharedConfigSeeded();
 
 chrome.contextMenus.onClicked.addListener(async (info) => {
   if (info.menuItemId !== 'ets-translate-speak') return;

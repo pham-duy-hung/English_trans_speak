@@ -56,3 +56,24 @@ cd English_trans_speak
 ```
 
 Sau khi sửa code: `chrome://extensions` → nút Reload trên extension.
+
+## Đóng gói gửi bạn bè (dùng chung Azure key của bạn)
+
+1. **Rotate key** nếu từng gửi key qua chat / public
+2. Copy `pack-secrets.example.json` → `pack-secrets.json`, dán Key + Region
+3. Chạy:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\pack.ps1
+```
+
+4. Lấy file `dist\English_trans_speak.zip` — gửi **riêng tư** (Zalo/Drive hạn chế)
+5. Bạn bè làm theo `INSTALL-FRIENDS.md` (Load unpacked)
+
+`pack-secrets.json` đã nằm trong `.gitignore` — **không** commit / push key lên GitHub.
+
+### Rủi ro khi share key
+
+- Ai có zip đều dùng được quota Translator của bạn
+- Hết Free F0 (~2M ký tự/tháng) thì cả nhóm cùng bị chặn
+- Không đăng zip lên group công khai / GitHub Release public
